@@ -12,13 +12,25 @@ export class Map extends React.Component {
     loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/Locate', 'esri/widgets/Track', 'esri/Graphic', 'esri/widgets/Search'], { css: true })
       .then(([ArcGISMap, MapView, FeatureLayer, Locate, Track, Graphic, Search]) => {
         const map = new ArcGISMap({
-          basemap: 'gray'
+          basemap: 'dark-gray'
         });
 
         this.view = new MapView({
           container: this.mapRef.current,
           map: map,
-          center: [-95.7129, 37.0902],
+          popup: {
+            dockEnabled: true,
+
+            dockOptions: {
+              position: "bottom-right",
+              // Disables the dock button from the popup
+              buttonEnabled: false,
+              // Ignore the default sizes that trigger responsive docking
+              breakpoint: false
+            }
+          },
+          center: [-75.5277, 38.9108],
+          // center: [-95.7129, 37.0902], center on US
           zoom: 4
         })
 
@@ -28,22 +40,58 @@ export class Map extends React.Component {
             type: "media",
             mediaInfos: [{
               type: "column-chart",
-              caption: "",
+              caption: "{Province_State} has <strong/>{Confirmed}</strong> confirmed cases, <strong>{Recovered}</strong> recovered and <strong>{Deaths}</strong> deaths.",
               value: {
                 fields: ["Confirmed", "Recovered", "Deaths"],
                 normalizeField: null,
-                tooltipField: "Confirmed cases, recovered cases, and deaths"
+                tooltipField: "Confirmed cases, recovered, and deaths"
               }
             }]
-          }]
+          }],
+
         }
+
+        var casesRenderer = {
+          type: "simple",  // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+            size: 20,
+            color: "black",
+            outline: {  // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "white"
+            }
+          }
+        };
+
+        var casesLabels = {
+          symbol: {
+            type: "text",
+            color: "white",
+            haloColor: "black",
+            haloSize: "1px",
+            font: {
+              size: "14px",
+              family: "Noto Sans",
+              style: "italic",
+              weight: "bold"
+            }
+          },
+          labelPlacement: "center-center",
+          labelExpressionInfo: {
+            expression: "$feature.Confirmed"
+          }
+        };
 
         var cases = new FeatureLayer({
           url: "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/Coronavirus_2019_nCoV_Cases/FeatureServer/1",
+          definitionExpression: "Country_Region = 'US'",
           opacity: .5,
           color: [0, 112, 255],
           outfields: ["Province_State", "Confirmed", "Recovered", "Deaths"],
-          popupTemplate: popupCases
+          popupTemplate: popupCases,
+          labelingInfo: [casesLabels],
+          renderer: casesRenderer
         })
 
         var deaths = new FeatureLayer({
