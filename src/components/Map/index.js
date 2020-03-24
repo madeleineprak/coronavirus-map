@@ -9,8 +9,8 @@ export class Map extends React.Component {
 
   componentDidMount() {
     // lazy load the required ArcGIS API for JavaScript modules and CSS
-    loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/Locate', 'esri/widgets/Track', 'esri/Graphic', 'esri/widgets/Search', 'esri/widgets/Fullscreen', "esri/widgets/Home"], { css: true })
-      .then(([ArcGISMap, MapView, FeatureLayer, Locate, Track, Graphic, Search, Fullscreen, Home]) => {
+    loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/Locate', 'esri/widgets/Track', 'esri/Graphic', 'esri/widgets/Search', 'esri/widgets/Fullscreen', 'esri/widgets/Home', 'esri/widgets/Legend'], { css: true })
+      .then(([ArcGISMap, MapView, FeatureLayer, Locate, Track, Graphic, Search, Fullscreen, Home, Legend]) => {
         const map = new ArcGISMap({
           basemap: 'dark-gray'
         });
@@ -52,16 +52,28 @@ export class Map extends React.Component {
         }
 
         var casesRenderer = {
-          type: "simple",  // autocasts as new SimpleRenderer()
+          type: "simple", 
           symbol: {
-            type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+            type: "simple-marker",  
             size: 20,
-            color: "black",
-            outline: {  // autocasts as new SimpleLineSymbol()
+            color: "#67b7dc",
+            outline: {  
               width: 0.5,
               color: "white"
             }
-          }
+          },
+          label: "# of confirmed cases by state", 
+          visualVariables: [
+            {
+              type: "size",
+              field: "Confirmed", 
+              // normalizationField: "Confirmed", 
+              minDataValue: 10, 
+              maxDataValue: 25000, 
+              minSize: 15,
+              maxSize: 60 
+            }
+          ]
         };
 
         var casesLabels = {
@@ -94,13 +106,11 @@ export class Map extends React.Component {
           renderer: casesRenderer
         })
 
-        var deaths = new FeatureLayer({
-          url: "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/Coronavirus_2019_nCoV_Cases/FeatureServer/0",
-          opacity: .5,
-          color: [0, 112, 255],
-        })
-
-        
+        // var deaths = new FeatureLayer({
+        //   url: "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/Coronavirus_2019_nCoV_Cases/FeatureServer/0",
+        //   opacity: .5,
+        //   color: [0, 112, 255],
+        // })
 
         // Search widget
         var search = new Search({
@@ -131,10 +141,29 @@ export class Map extends React.Component {
 
         // Add the home button to the top left corner of the view
         this.view.ui.add(homeBtn, "top-left");
-      
+
         map.add(cases)
         // map.add(deaths)
-      });
+
+        //  this.view.when(function() {
+          // get the first layer in the collection of operational layers in the WebMap
+          // when the resources in the MapView have loaded.
+          // var featureLayer = this.webmap.layers.getItemAt(0);
+
+          var legend = new Legend({
+            view: this.view,
+            layerInfos: [
+              {
+                layer: cases,
+                title: "# of cases"
+              }
+            ]
+          });
+
+          // Add widget to the bottom right corner of the view
+          this.view.ui.add(legend, "bottom-right");
+        });
+      // });
   }
 
   componentWillUnmount() {
