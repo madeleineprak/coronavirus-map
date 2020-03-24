@@ -68,9 +68,9 @@ export class Map extends React.Component {
               type: "size",
               field: "Confirmed", 
               // normalizationField: "Confirmed", 
-              minDataValue: 10, 
+              minDataValue: 20, 
               maxDataValue: 25000, 
-              minSize: 15,
+              minSize: 10,
               maxSize: 60 
             }
           ]
