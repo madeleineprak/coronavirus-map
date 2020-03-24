@@ -9,8 +9,8 @@ export class Map extends React.Component {
 
   componentDidMount() {
     // lazy load the required ArcGIS API for JavaScript modules and CSS
-    loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/Locate', 'esri/widgets/Track', 'esri/Graphic', 'esri/widgets/Search'], { css: true })
-      .then(([ArcGISMap, MapView, FeatureLayer, Locate, Track, Graphic, Search]) => {
+    loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/Locate', 'esri/widgets/Track', 'esri/Graphic', 'esri/widgets/Search', 'esri/widgets/Fullscreen', "esri/widgets/Home"], { css: true })
+      .then(([ArcGISMap, MapView, FeatureLayer, Locate, Track, Graphic, Search, Fullscreen, Home]) => {
         const map = new ArcGISMap({
           basemap: 'dark-gray'
         });
@@ -71,7 +71,7 @@ export class Map extends React.Component {
             haloColor: "black",
             haloSize: "1px",
             font: {
-              size: "14px",
+              size: "12px",
               family: "Noto Sans",
               style: "italic",
               weight: "bold"
@@ -100,6 +100,20 @@ export class Map extends React.Component {
           color: [0, 112, 255],
         })
 
+        
+
+        // Search widget
+        var search = new Search({
+          view: this.view
+        });
+
+        this.view.ui.add(search, "top-right");
+
+        var fullscreen = new Fullscreen({
+          view: this.view
+        });
+        this.view.ui.add(fullscreen, "top-right");
+
         var locate = new Locate({
           view: this.view,
           useHeadingEnabled: false,
@@ -111,13 +125,13 @@ export class Map extends React.Component {
 
         this.view.ui.add(locate, "top-left");
 
-        // Search widget
-        var search = new Search({
+        var homeBtn = new Home({
           view: this.view
         });
 
-        this.view.ui.add(search, "top-right");
-
+        // Add the home button to the top left corner of the view
+        this.view.ui.add(homeBtn, "top-left");
+      
         map.add(cases)
         // map.add(deaths)
       });
