@@ -1,4 +1,4 @@
-You can view the deployed app here [http://madeleineprak.github.io/map-project](http://madeleineprak.github.io/map-project).
+You can view the deployed app here [http://madeleineprak.github.io/map-project](http://madeleineprak.github.io/coronavirus-map).
 
 ## COVID-19 Cases in the United States
 
