@@ -3,7 +3,7 @@ import './style.css'
 
 function Footer() {
     return (
-        <div id="contact" className="footer">
+        <div id="contact" className="has-background-black-ter">
             <div className="has-text-centered">
                 <p>
                     <p>Data sources are WHO, US CDC, China NHC, ECDC, and DXY and the map layer can be found <a target="_blank" href="https://www.arcgis.com/home/item.html?id=c0b356e20b30490c8b8b4c7bb9554e7c">here</a>.</p>
