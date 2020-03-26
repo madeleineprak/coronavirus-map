@@ -6,6 +6,10 @@ Due to the current coronavirus pandemic and seeing the [John Hopkin's University
 
 You can also click on each circle to view the number of confirmed cases, recoveries and deaths in a bar chart.
 
+### Demo
+
+![Demo](https://user-images.githubusercontent.com/26778117/77620016-b2438100-6ef6-11ea-947a-0429b4549a51.PNG)
+
 ### Data
 
 Data sources are WHO, US CDC, China NHC, ECDC, and DXY and the map layer can be found [here](https://www.arcgis.com/home/item.html?id=c0b356e20b30490c8b8b4c7bb9554e7c).
